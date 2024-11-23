@@ -4,4 +4,9 @@
 
 Ce repo contient une librairie python permettant de communiquer avec une embase utilisant l'API *Embase Holonum V2*.
 
-Le code destiné à la STM32 contrôlant les moteurs se trouve [nulle part]().
+Il contient aussi un firmware destiné à contrôler une embase de ce type avec une *STM32 Nucleo L432KC*.
+
+## Avancement du projet
+
+- Python WIP
+- Code STM32 WIP
