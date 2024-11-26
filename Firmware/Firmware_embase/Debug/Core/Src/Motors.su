@@ -1,0 +1,7 @@
+../Core/Src/Motors.c:60:6:Motors_Init	16	static
+../Core/Src/Motors.c:75:6:Motors_SetSpeedSingle	16	static
+../Core/Src/Motors.c:89:6:Motors_StopSingle	16	static
+../Core/Src/Motors.c:101:6:Motors_SetSpeedAll	24	static
+../Core/Src/Motors.c:110:6:Motors_StopAll	16	static
+../Core/Src/Motors.c:124:6:Motors_Update	16	static
+../Core/Src/Motors.c:147:6:Motors_TimerITCallback	16	static
