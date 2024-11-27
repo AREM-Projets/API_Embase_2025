@@ -93,11 +93,14 @@ void Commands_RxCallback(UART_HandleTypeDef * huart)
 		{
 			Utils_printCommandError(err);
 		}
-		// err = Commands_executeCurrent();
-		// if (err)
-		// {
-		// 	Utils_printCommandError(err);
-		// }
+		else 
+		{
+			// err = Commands_executeCurrent();
+			// if (err)
+			// {
+			// 	Utils_printCommandError(err);
+			// }
+		}
 
 		index = 0;
 	}
@@ -118,6 +121,12 @@ Commands_Error_t Commands_executeCurrent()
 	{
 		err = Config_handleCommand(current_command);
 	}
+	// ---new destination example---
+	// else if (!strcmp((char *) current_command.destination, "example"))
+	// {
+	//	   err = Example_handleCommand(current_command);
+	// }
+	// ---example end---
 	else
 	{
 		err = CMD_ERROR_INVALID_DESTINATION;
