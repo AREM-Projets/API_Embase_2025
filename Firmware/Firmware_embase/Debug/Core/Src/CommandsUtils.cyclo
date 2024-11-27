@@ -1,0 +1,9 @@
+../Core/Src/CommandsUtils.c:13:6:Utils_initEmptyCommand	2
+../Core/Src/CommandsUtils.c:24:10:Utils_getCommandInfoString	3
+../Core/Src/CommandsUtils.c:45:18:Utils_setCommandPartByIndex	6
+../Core/Src/CommandsUtils.c:79:9:Utils_power	3
+../Core/Src/CommandsUtils.c:96:6:Utils_isNumeric	3
+../Core/Src/CommandsUtils.c:101:18:Utils_stringToInt32	7
+../Core/Src/CommandsUtils.c:141:18:Utils_int32ToString	10
+../Core/Src/CommandsUtils.c:197:6:Utils_printToUart2	1
+../Core/Src/CommandsUtils.c:202:6:Utils_printCommandError	9

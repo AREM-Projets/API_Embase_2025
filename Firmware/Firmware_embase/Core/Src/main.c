@@ -26,7 +26,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Motors.h"
-#include "stdio_wrapper.h"
 #include "CommandHandler.h"
 /* USER CODE END Includes */
 
@@ -48,7 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern char command_buffer[];
+extern uint8_t command_buffer[];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,7 +69,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	int test = 5;
 	MotorDirection_t dirs[3] = {DIR_FORWARD, DIR_FORWARD, DIR_BACKWARD};
 	uint32_t periods[3] = {10000, 10000, 10000};
 
@@ -104,14 +102,13 @@ int main(void)
   HAL_UART_Receive_IT(&huart2, &(command_buffer[0]), 1);
 
   Motors_SetSpeedAll(dirs, periods);
+  Utils_printToUart2((uint8_t *) "Init OK\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  printf("Hey %d\n", test);
-	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -181,7 +178,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 {
 	if (huart->Instance == USART2)
 	{
-
+		Commands_RxCallback(huart);
 	}
 }
 

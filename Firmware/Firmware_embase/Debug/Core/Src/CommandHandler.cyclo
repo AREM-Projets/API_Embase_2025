@@ -1,0 +1,4 @@
+../Core/Src/CommandHandler.c:33:9:local_getCharIndex	4
+../Core/Src/CommandHandler.c:52:6:Commands_RxCallback	5
+../Core/Src/CommandHandler.c:95:18:Commands_executeCurrent	2
+../Core/Src/CommandHandler.c:111:18:Commands_parseIntoCurrent	7

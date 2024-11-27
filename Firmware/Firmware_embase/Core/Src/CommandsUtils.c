@@ -7,7 +7,114 @@
 
 #include "CommandUtils.h"
 #include "string.h"
+#include "main.h"
+#include "usart.h"
 
+/**
+ * @brief Initialize a command (set all elements to 0)
+ * 
+ * @param command_ptr 
+ */
+void Utils_initEmptyCommand(Command_t *command_ptr)
+{
+	memset(command_ptr->destination, 0, COMMAND_DESTINATION_MAX_LENGTH);
+	memset(command_ptr->type, 0, COMMAND_TYPE_MAX_LENGTH);
+	memset(command_ptr->name, 0, COMMAND_NAME_MAX_LENGTH);
+	for (uint32_t i = 0; i < COMMAND_MAX_ARGS; i++)
+	{
+		memset(command_ptr->args[i], 0, COMMAND_ARG_MAX_LENGTH);
+	}
+}
+
+/**
+ * @brief Get info about a command in a string (that can be printed). UNSAFE DEBUG FUNCTION.
+ * 
+ * @param command command to get info from
+ * @param buffer buffer to store the resulting string into (make sure it's big enough)
+ * @return uint8_t* 
+ */
+uint8_t *Utils_getCommandInfoString(Command_t command, uint8_t *buffer)
+{
+	strcpy((char *) buffer, "dest [");
+	strcat((char *) buffer, (char *) command.destination);
+	strcat((char *) buffer, "]\ntype [");
+	strcat((char *) buffer, (char *) command.type);
+	strcat((char *) buffer, "]\nname [");
+	strcat((char *) buffer, (char *) command.name);
+	strcat((char *) buffer, "]\nargs [");
+	for (uint32_t i = 0; i < COMMAND_MAX_ARGS; i++)
+	{
+		if (strcmp((char *) command.args[i], "") != 0)
+		{
+			strcat((char *) buffer, (char *) command.args[i]);
+			strcat((char *) buffer, "|");
+		}
+	}
+
+	return buffer;
+}
+
+/**
+ * @brief set the value of a command part (destination, type, name, args)
+ * 
+ * @param command_ptr pointer to the command
+ * @param index index of the part (0: destination, 1: type etc.)
+ * @param str string to store
+ * @param length length of the string
+ * @return Commands_Error_t 
+ */
+Commands_Error_t Utils_setCommandPartByIndex(Command_t *command_ptr, uint32_t index, uint8_t *str, uint32_t length)
+{
+	switch (index) {
+		case 0:
+			if (length > COMMAND_DESTINATION_MAX_LENGTH)
+			{
+				return CMD_ERROR_INVALID_DESTINATION;
+			}
+			strncpy((char *) command_ptr->destination, (char *) str, length);
+			return CMD_ERROR_OK;
+			break;
+
+		case 1:
+			if (length > COMMAND_TYPE_MAX_LENGTH)
+			{
+				return CMD_ERROR_INVALID_TYPE;
+			}
+			strncpy((char *) command_ptr->type, (char *) str, length);
+			return CMD_ERROR_OK;
+			break;
+
+		case 2:
+			if (length > COMMAND_NAME_MAX_LENGTH)
+			{
+				return CMD_ERROR_INVALID_NAME;
+			}
+			strncpy((char *) command_ptr->name, (char *) str, length);
+			return CMD_ERROR_OK;
+			break;
+
+		default:
+			// Check if argument can exist (index not too big)
+			if ((index >= (COMMAND_MAX_ARGS + 3)) || (length > COMMAND_ARG_MAX_LENGTH))
+			{
+				return CMD_ERROR_INVALID_ARGS;
+			}
+			strncpy((char *) command_ptr->args[index - 3], (char *) str, length);
+			return CMD_ERROR_OK;
+
+			break;
+	}
+
+	return CMD_ERROR_COULD_NOT_PARSE;
+}
+
+/**
+ * @brief returns base^exponent
+ * 
+ * @param base 
+ * @param exponent 
+ * @return int32_t 
+ */
 int32_t Utils_power(int32_t base, uint32_t exponent)
 {
 	int32_t res = 1;
@@ -25,15 +132,29 @@ int32_t Utils_power(int32_t base, uint32_t exponent)
 	return res;
 }
 
-bool Utils_isNumeric(char c)
+/**
+ * @brief returns true if c is a number
+ * 
+ * @param c char to test
+ * @return bool 
+ */
+bool Utils_isNumeric(uint8_t c)
 {
 	return (c >= '0' && c <= '9');
 }
 
-Commands_Error_t Utils_stringToInt32(char *src, uint32_t length, int32_t *dest)
+/**
+ * @brief Transform a string to an int32_t and store it
+ * 
+ * @param src string to transform
+ * @param length length of the string
+ * @param dest pointer to the resulting int32_t
+ * @return Commands_Error_t 
+ */
+Commands_Error_t Utils_stringToInt32(uint8_t *src, uint32_t length, int32_t *dest)
 {
 	// take minimum length between given argument and strlen
-	length = (length > strlen(src)) ? length : strlen(src);
+	length = (length > strlen((char *) src)) ? length : strlen((char *) src);
 	int32_t res = 0;
 	uint32_t start_index = 0;
 
@@ -50,7 +171,7 @@ Commands_Error_t Utils_stringToInt32(char *src, uint32_t length, int32_t *dest)
 	{
 		if (!Utils_isNumeric(src[i]))
 		{
-			return COMMAND_INVALID_ARGS;
+			return CMD_ERROR_INVALID_ARGS;
 		}
 
 		// add each digit separately
@@ -67,10 +188,18 @@ Commands_Error_t Utils_stringToInt32(char *src, uint32_t length, int32_t *dest)
 		*dest = res;
 	}
 
-	return COMMAND_OK;
+	return CMD_ERROR_OK;
 }
 
-Commands_Error_t Utils_int32ToString(int32_t src, char *dest, uint32_t length)
+/**
+ * @brief Transform an int32_t to a string
+ * 
+ * @param src int32_t to transform
+ * @param dest string to store the number into
+ * @param length length of the string
+ * @return Commands_Error_t 
+ */
+Commands_Error_t Utils_int32ToString(int32_t src, uint8_t *dest, uint32_t length)
 {
 	if (length == 0 || dest == NULL)
 	{
@@ -78,25 +207,23 @@ Commands_Error_t Utils_int32ToString(int32_t src, char *dest, uint32_t length)
 	}
 
 	uint32_t index = 0;
-	bool isNegative = false;
 
 	// handle negative values
 	if (src < 0)
 	{
-		isNegative = true;
 		if (index < length)
 		{
 			dest[index++] = '-';
 		}
 		else
 		{
-			return COMMAND_TOO_LONG;
+			return CMD_ERROR_COMMAND_TOO_LONG;
 		}
 		src = -src;
 	}
 
 	// Temporary buffer to hold digits in reverse order, big enough for any int32 with 12 chars.
-	char buffer[12];
+	uint8_t buffer[12];
 	uint32_t i = 0;
 
 	do {
@@ -106,7 +233,7 @@ Commands_Error_t Utils_int32ToString(int32_t src, char *dest, uint32_t length)
 
 	// If the number does not fit (should not happen)
 	if (index + i >= length) {
-		return COMMAND_TOO_LONG;
+		return CMD_ERROR_COMMAND_TOO_LONG;
 	}
 
 	// Mirror buffer into dest
@@ -114,7 +241,7 @@ Commands_Error_t Utils_int32ToString(int32_t src, char *dest, uint32_t length)
 		if (index < length) {
 			dest[index++] = buffer[--i];
 		} else {
-			return COMMAND_TOO_LONG;
+			return CMD_ERROR_COMMAND_TOO_LONG;
 		}
 	}
 
@@ -122,44 +249,58 @@ Commands_Error_t Utils_int32ToString(int32_t src, char *dest, uint32_t length)
 	if (index < length) {
 		dest[index] = '\0';
 	} else {
-		return COMMAND_TOO_LONG;
+		return CMD_ERROR_COMMAND_TOO_LONG;
 	}
 
-	return COMMAND_OK;
+	return CMD_ERROR_OK;
 }
 
-void Utils_printToUart2(char* string)
+/**
+ * @brief print a string using UART2 via DMA. ONLY 1 PRINT PER INTERRUPT WILL WORK.
+ * 
+ * @param string zero-terminated string to be printed
+ */
+void Utils_printToUart2(uint8_t* string)
 {
-	HAL_UART_Transmit_DMA(&huart2, string, strlen(string));
+	HAL_UART_Transmit_DMA(&huart2, string, strlen((char *) string));
 }
 
+/**
+ * @brief print an error message based on the error.
+ * 
+ * @param error error to print the message for.
+ */
 void Utils_printCommandError(Commands_Error_t error)
 {
 	switch (error) {
-		case COMMAND_INVALID_DESTINATION:
-			Utils_printToUart2("");
+		case CMD_ERROR_INVALID_DESTINATION:
+			Utils_printToUart2((uint8_t *) "[Error] Invalid command destination\n");
 			break;
-		case COMMAND_INVALID_TYPE:
-			Utils_printToUart2("");
+		case CMD_ERROR_INVALID_TYPE:
+			Utils_printToUart2((uint8_t *) "[Error] Invalid command type\n");
 			break;
-		case COMMAND_INVALID_NAME:
-			Utils_printToUart2("[Error] Command does not exist\n");
+		case CMD_ERROR_INVALID_NAME:
+			Utils_printToUart2((uint8_t *) "[Error] Invalid command name\n");
 			break;
-		case COMMAND_INVALID_ARGS:
-			Utils_printToUart2("[Error] Invalid args given\n");
+		case CMD_ERROR_INVALID_ARGS:
+			Utils_printToUart2((uint8_t *) "[Error] Invalid arguments given\n");
 			break;
-		case COMMAND_TOO_LONG:
-			Utils_printToUart2("[Error] Command is too long\n");
+		case CMD_ERROR_COMMAND_TOO_LONG:
+			Utils_printToUart2((uint8_t *) "[Error] Command is too long\n");
 			break;
-		case COMMAND_COULD_NOT_PARSE:
-			Utils_printToUart2("[Error] Could not parse command\n");
+		case CMD_ERROR_COULD_NOT_PARSE:
+			Utils_printToUart2((uint8_t *) "[Error] Could not parse command\n");
 			break;
-		case COMMAND_UNKNOWN_ERROR:
-			Utils_printToUart2("[Error] Unspecified error\n");
+		case CMD_ERROR_UNKNOWN:
+			Utils_printToUart2((uint8_t *) "[Error] Unspecified error\n");
+			break;
+
+		case CMD_ERROR_NOT_IMPLEMENTED:
+			Utils_printToUart2((uint8_t *) "[Error] Not implemented\n");
 			break;
 
 		default:
-			Utils_printToUart2("[Error] no error message \n");
+			Utils_printToUart2((uint8_t *) "[Error] no error message (default case) \n");
 			break;
 	}
 }
