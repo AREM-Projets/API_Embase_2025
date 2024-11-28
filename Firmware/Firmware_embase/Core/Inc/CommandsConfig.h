@@ -12,18 +12,6 @@
 
 typedef enum
 {
-	ARG_INT,
-	ARG_STRING
-} ArgType_t;
-
-typedef enum
-{
-	char var_name[COMMAND_TYPE_MAX_LENGTH];
-
-} ConfigVar_t;
-
-typedef enum
-{
 	TEAM_NONE = 0,
 	TEAM_BLUE = 1,
 	TEAM_YELLOW = 2

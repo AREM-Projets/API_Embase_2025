@@ -1,0 +1,7 @@
+../Core/Src/CommandsConfig.c:24:8:local_stringToTeamEnum	5
+../Core/Src/CommandsConfig.c:38:10:local_teamEnumToString	3
+../Core/Src/CommandsConfig.c:56:12:local_stringToStrategyEnum	5
+../Core/Src/CommandsConfig.c:70:10:local_strategyEnumToString	3
+../Core/Src/CommandsConfig.c:89:18:Config_get	3
+../Core/Src/CommandsConfig.c:107:18:Config_set	1
+../Core/Src/CommandsConfig.c:112:18:Config_handleCommand	4

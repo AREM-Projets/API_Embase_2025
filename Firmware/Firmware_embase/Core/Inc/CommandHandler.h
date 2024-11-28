@@ -12,6 +12,8 @@
 #include "stdbool.h"
 #include "CommandUtils.h"
 
+#include "CommandsConfig.h"
+
 void Commands_RxCallback(UART_HandleTypeDef * huart);
 
 #endif /* INC_COMMANDHANDLER_H_ */

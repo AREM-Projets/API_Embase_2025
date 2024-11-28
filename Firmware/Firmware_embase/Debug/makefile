@@ -60,8 +60,8 @@ all: main-build
 main-build: Firmware_embase.elf secondary-outputs
 
 # Tool invocations
-Firmware_embase.elf Firmware_embase.map: $(OBJS) $(USER_OBJS) C:\Users\Lenovo\STM32CubeIDE\workspace_1.16.0\Firmware_embase\STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Firmware_embase.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Lenovo\STM32CubeIDE\workspace_1.16.0\Firmware_embase\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Firmware_embase.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Firmware_embase.elf Firmware_embase.map: $(OBJS) $(USER_OBJS) C:\Users\Lenovo\Documents\Git_repos\API_Embase\Firmware\Firmware_embase\STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Firmware_embase.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Lenovo\Documents\Git_repos\API_Embase\Firmware\Firmware_embase\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Firmware_embase.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

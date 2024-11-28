@@ -56,7 +56,10 @@ void Motors_Update();
 
 /////// Functions definitions //////
 
-
+/**
+ * @brief Initialize all 3 motors.
+ * 
+ */
 void Motors_Init()
 {
 	for (int i = 0; i < 3; ++i)
@@ -72,6 +75,13 @@ void Motors_Init()
 	Motors_Update();
 }
 
+/**
+ * @brief Set the speed of 1 motor (does not update hardware)
+ * 
+ * @param motor_index index of the motor
+ * @param direction direction for the motor
+ * @param step_period_us period of a step in microseconds
+ */
 void Motors_SetSpeedSingle(uint8_t motor_index, MotorDirection_t direction, uint32_t step_period_us)
 {
 	motor_states[motor_index].direction = direction;
@@ -86,6 +96,11 @@ void Motors_SetSpeedSingle(uint8_t motor_index, MotorDirection_t direction, uint
 	}
 }
 
+/**
+ * @brief Stop 1 motor 
+ * 
+ * @param motor_index 
+ */
 void Motors_StopSingle(uint8_t motor_index)
 {
 	motor_states[motor_index].enabled = false;
