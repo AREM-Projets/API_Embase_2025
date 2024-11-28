@@ -139,6 +139,7 @@ Commands_Error_t Commands_executeCurrent()
  */
 Commands_Error_t Commands_parseIntoCurrent()
 {
+	Commands_Error_t err = CMD_ERROR_OK;
 	Utils_initEmptyCommand(&current_command);
 
 	// Check that the command ends (and get length)
@@ -182,7 +183,11 @@ Commands_Error_t Commands_parseIntoCurrent()
 			return CMD_ERROR_COULD_NOT_PARSE;
 		}
 
-		Utils_setCommandPartByIndex(&current_command, command_part_index, &temp_buffer[start_index], space_index);
+		err = Utils_setCommandPartByIndex(&current_command, command_part_index, &temp_buffer[start_index], space_index);
+		if (err)
+		{
+			return err;
+		}
 
 		start_index += space_index + 1; // deletes everything before the space by manipulating the pointer.
 		command_length -= (space_index + 1); // Updates command length
