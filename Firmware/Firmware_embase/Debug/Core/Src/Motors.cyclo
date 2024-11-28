@@ -1,7 +1,7 @@
-../Core/Src/Motors.c:63:6:Motors_Init	5
-../Core/Src/Motors.c:85:6:Motors_SetSpeedSingle	6
-../Core/Src/Motors.c:104:6:Motors_StopSingle	5
-../Core/Src/Motors.c:116:6:Motors_SetSpeedAll	2
-../Core/Src/Motors.c:125:6:Motors_StopAll	2
-../Core/Src/Motors.c:139:6:Motors_Update	29
-../Core/Src/Motors.c:162:6:Motors_TimerITCallback	4
+../Core/Src/Motors.c:68:6:Motors_Init	5
+../Core/Src/Motors.c:90:6:Motors_SetSpeedSingle	6
+../Core/Src/Motors.c:109:6:Motors_StopSingle	5
+../Core/Src/Motors.c:121:6:Motors_SetSpeedAll	2
+../Core/Src/Motors.c:130:6:Motors_StopAll	2
+../Core/Src/Motors.c:144:6:Motors_Update	14
+../Core/Src/Motors.c:167:6:Motors_TimerITCallback	4

@@ -40,15 +40,15 @@ uint8_t *local_teamEnumToString(Team_t team)
 	switch (team) {
 
 		case TEAM_BLUE:
-			return (uint8_t *) "blue";
+			return (uint8_t *) "blue\n";
 			break;
 
 		case TEAM_YELLOW:
-			return (uint8_t *) "yellow";
+			return (uint8_t *) "yellow\n";
 			break;
 
 		default:
-			return (uint8_t *) "none";
+			return (uint8_t *) "none\n";
 			break;
 	}
 }
@@ -71,15 +71,15 @@ uint8_t *local_strategyEnumToString(Strategy_t strategy)
 {
 	switch (strategy) {
 		case STRATEGY_BASIC:
-			return (uint8_t *) "basic";
+			return (uint8_t *) "basic\n";
 			break;
 
 		case STRATEGY_TEST:
-			return (uint8_t *) "test";
+			return (uint8_t *) "test\n";
 			break;
 
 		default:
-			return (uint8_t *) "none";
+			return (uint8_t *) "none\n";
 			break;
 	}
 }
@@ -100,13 +100,30 @@ Commands_Error_t Config_get(uint8_t *var_name)
 	}
 	else
 	{
-		return CMD_ERROR_INVALID_NAME;
+		return CMD_ERROR_INVALID_ARGS;
 	}
 }
 
 Commands_Error_t Config_set(uint8_t *var_name, uint8_t *value)
 {
-	return CMD_ERROR_NOT_IMPLEMENTED;
+	if (strcmp((char *) var_name, "team") == 0)
+	{
+		team = local_stringToTeamEnum(value);
+
+		Utils_printToUart2(local_teamEnumToString(team));
+		return CMD_ERROR_OK;
+	}
+	else if(strcmp((char *) var_name, "strategy") == 0)
+	{
+		strategy = local_stringToStrategyEnum(value);
+
+		Utils_printToUart2(local_strategyEnumToString(strategy));
+		return CMD_ERROR_OK;
+	}
+	else
+	{
+		return CMD_ERROR_INVALID_ARGS;
+	}
 }
 
 Commands_Error_t Config_handleCommand(Command_t command)
@@ -118,17 +135,17 @@ Commands_Error_t Config_handleCommand(Command_t command)
 	}
 
 	// Handle command type
-	if (strcmp((char *) command.type, "get") == 0)
+	if (strcmp((char *) command.name, "get") == 0)
 	{
-		return Config_get(command.name);
+		return Config_get(command.args[0]);
 	}
-	else if (strcmp((char *) command.type, "set") == 0)
+	else if (strcmp((char *) command.name, "set") == 0)
 	{
-		return Config_set(command.name, command.args[0]);
+		return Config_set(command.args[0], command.args[1]);
 	}
 	else
 	{
-		return CMD_ERROR_INVALID_TYPE;
+		return CMD_ERROR_INVALID_NAME;
 	}
 
 }

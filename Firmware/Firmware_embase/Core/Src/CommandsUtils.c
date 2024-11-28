@@ -18,7 +18,6 @@
 void Utils_initEmptyCommand(Command_t *command_ptr)
 {
 	memset(command_ptr->destination, 0, COMMAND_DESTINATION_MAX_LENGTH);
-	memset(command_ptr->type, 0, COMMAND_TYPE_MAX_LENGTH);
 	memset(command_ptr->name, 0, COMMAND_NAME_MAX_LENGTH);
 	for (uint32_t i = 0; i < COMMAND_MAX_ARGS; i++)
 	{
@@ -27,38 +26,10 @@ void Utils_initEmptyCommand(Command_t *command_ptr)
 }
 
 /**
- * @brief Get info about a command in a string (that can be printed). UNSAFE DEBUG FUNCTION.
- * 
- * @param command command to get info from
- * @param buffer buffer to store the resulting string into (make sure it's big enough)
- * @return uint8_t* 
- */
-uint8_t *Utils_getCommandInfoString(Command_t command, uint8_t *buffer)
-{
-	strcpy((char *) buffer, "dest [");
-	strcat((char *) buffer, (char *) command.destination);
-	strcat((char *) buffer, "]\ntype [");
-	strcat((char *) buffer, (char *) command.type);
-	strcat((char *) buffer, "]\nname [");
-	strcat((char *) buffer, (char *) command.name);
-	strcat((char *) buffer, "]\nargs [");
-	for (uint32_t i = 0; i < COMMAND_MAX_ARGS; i++)
-	{
-		if (strcmp((char *) command.args[i], "") != 0)
-		{
-			strcat((char *) buffer, (char *) command.args[i]);
-			strcat((char *) buffer, "|");
-		}
-	}
-
-	return buffer;
-}
-
-/**
- * @brief set the value of a command part (destination, type, name, args)
+ * @brief set the value of a command part (destination, name, args)
  * 
  * @param command_ptr pointer to the command
- * @param index index of the part (0: destination, 1: type etc.)
+ * @param index index of the part (0: destination, 1: name, >2: args)
  * @param str string to store
  * @param length length of the string
  * @return Commands_Error_t 
@@ -76,15 +47,6 @@ Commands_Error_t Utils_setCommandPartByIndex(Command_t *command_ptr, uint32_t in
 			break;
 
 		case 1:
-			if (length > COMMAND_TYPE_MAX_LENGTH)
-			{
-				return CMD_ERROR_INVALID_TYPE;
-			}
-			strncpy((char *) command_ptr->type, (char *) str, length);
-			return CMD_ERROR_OK;
-			break;
-
-		case 2:
 			if (length > COMMAND_NAME_MAX_LENGTH)
 			{
 				return CMD_ERROR_INVALID_NAME;
@@ -95,11 +57,11 @@ Commands_Error_t Utils_setCommandPartByIndex(Command_t *command_ptr, uint32_t in
 
 		default:
 			// Check if argument can exist (index not too big)
-			if ((index >= (COMMAND_MAX_ARGS + 3)) || (length > COMMAND_ARG_MAX_LENGTH))
+			if ((index >= (COMMAND_MAX_ARGS + 2)) || (length > COMMAND_ARG_MAX_LENGTH))
 			{
 				return CMD_ERROR_INVALID_ARGS;
 			}
-			strncpy((char *) command_ptr->args[index - 3], (char *) str, length);
+			strncpy((char *) command_ptr->args[index - 2], (char *) str, length);
 			return CMD_ERROR_OK;
 
 			break;
@@ -275,9 +237,6 @@ void Utils_printCommandError(Commands_Error_t error)
 	switch (error) {
 		case CMD_ERROR_INVALID_DESTINATION:
 			Utils_printToUart2((uint8_t *) "[Error] Invalid command destination\n");
-			break;
-		case CMD_ERROR_INVALID_TYPE:
-			Utils_printToUart2((uint8_t *) "[Error] Invalid command type\n");
 			break;
 		case CMD_ERROR_INVALID_NAME:
 			Utils_printToUart2((uint8_t *) "[Error] Invalid command name\n");

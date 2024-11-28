@@ -167,7 +167,7 @@ Commands_Error_t Commands_parseIntoCurrent()
 	while (strlen((char *) &temp_buffer[start_index]) > 0)
 	{
 		// Check if argument overflows max_args
-		if (command_part_index >= COMMAND_MAX_ARGS + 3)
+		if (command_part_index >= COMMAND_MAX_ARGS + 2)
 		{
 			return CMD_ERROR_INVALID_ARGS;
 		}
