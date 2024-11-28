@@ -2,6 +2,11 @@
 
 /////// Local variables //////
 
+// #define MOTORS_MIN_PERIOD_US 100
+
+/// Max period because we are using 16 bit timers
+#define MOT_TIM_MAX_PERIOD_US (65535 / (2 * MOT_TIM_TICKTIME_US))
+
 // Tracks the state of the motors
 static MotorState_t motor_states[3];
 
@@ -140,22 +145,22 @@ void Motors_Update()
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		// Timer overflow //
-		if (motor_states[i].step_period_us >= MOTORS_MIN_PERIOD_US && motor_states[i].step_period_us <= MOTORS_MAX_PERIOD_US)
+		// 2 * MOT_TIM_TICK_PERIOD_US because 1 step = 2 overflows
+		uint32_t arr_value = motor_states[i].step_period_us / (2 * MOT_TIM_TICKTIME_US);
+
+		// force it to be 16 bit
+		if (arr_value > 65535)
 		{
-			__HAL_TIM_SET_AUTORELOAD(MOT_TIM_HANDLE_PTR(i), (uint32_t)(motor_states[i].step_period_us));
+			arr_value = 65535;
 		}
-		else if (motor_states[i].step_period_us > MOTORS_MAX_PERIOD_US)
-		{
-			__HAL_TIM_SET_AUTORELOAD(MOT_TIM_HANDLE_PTR(i), (uint32_t)(MOTORS_MAX_PERIOD_US));
-		}
-		else if (motor_states[i].step_period_us < MOTORS_MIN_PERIOD_US)
-		{
-			__HAL_TIM_SET_AUTORELOAD(MOT_TIM_HANDLE_PTR(i), (uint32_t)(MOTORS_MIN_PERIOD_US));
-		}
+
+		__HAL_TIM_SET_AUTORELOAD(MOT_TIM_HANDLE_PTR(i), arr_value);
 
 		// Direction pin state
 		HAL_GPIO_WritePin(MOT_DIR_GPIO_PORT(i), MOT_DIR_GPIO_PIN(i), motor_states[i].direction);
+
+		// Enable pin state
+		// Enable not supported yet.
 	}
 }
 

@@ -15,6 +15,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// Incremetnation period for all motor timers
+#define MOT_TIM_TICKTIME_US 1
+
 #define MOT0_TIM_HANDLE_PTR (&htim2)
 #define MOT1_TIM_HANDLE_PTR (&htim6)
 #define MOT2_TIM_HANDLE_PTR (&htim7)
@@ -31,9 +34,6 @@ typedef struct
 	MotorDirection_t direction;
 	bool enabled;
 } MotorState_t;
-
-#define MOTORS_MIN_PERIOD_US 100
-#define MOTORS_MAX_PERIOD_US 65535
 
 /* The states of all 3 motors are defined in Motors.c as the following variables :
  * - Motor0_state (at the front of the robot)
