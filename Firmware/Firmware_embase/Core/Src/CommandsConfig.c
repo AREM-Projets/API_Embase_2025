@@ -120,15 +120,15 @@ Commands_Error_t Config_handleCommand(Command_t command)
 	// Handle command type
 	if (strcmp((char *) command.type, "get") == 0)
 	{
-		return Config_get(command.args[0]);
+		return Config_get(command.name);
 	}
 	else if (strcmp((char *) command.type, "set") == 0)
 	{
-		return Config_set(command.args[0], command.args[1]);
+		return Config_set(command.name, command.args[0]);
 	}
 	else
 	{
-		return CMD_ERROR_INVALID_NAME;
+		return CMD_ERROR_INVALID_TYPE;
 	}
 
 }

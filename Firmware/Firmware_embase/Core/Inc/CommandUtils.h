@@ -49,7 +49,7 @@ typedef struct
 void Utils_initEmptyCommand(Command_t *command_ptr);
 uint8_t *Utils_getCommandInfoString(Command_t command, uint8_t *buffer);
 
-Commands_Error_t Utils_setCommandPartByIndex(Command_t *command_ptr, uint32_t index, uint8_t *str);
+Commands_Error_t Utils_setCommandPartByIndex(Command_t *command_ptr, uint32_t index, uint8_t *str, uint32_t length);
 Commands_Error_t Utils_stringToInt32(uint8_t *src, uint32_t length, int32_t *dest);
 Commands_Error_t Utils_int32ToString(int32_t src, uint8_t *dest, uint32_t length);
 int32_t Utils_power(int32_t base, uint32_t exponent);

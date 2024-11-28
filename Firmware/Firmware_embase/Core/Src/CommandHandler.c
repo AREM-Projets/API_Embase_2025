@@ -80,13 +80,6 @@ void Commands_RxCallback(UART_HandleTypeDef * huart)
 
 	if(received_char == '\n' || received_char == '\r')
 	{
-		// debug
-		// char debug_buffer[64] = {0};
-		// strcpy(debug_buffer, "executing : ");
-		// strcat(debug_buffer, (char *)command_buffer);
-		// strcat(debug_buffer, "\n");
-		// Utils_printToUart2((uint8_t *)debug_buffer);
-
 
 		err = Commands_parseIntoCurrent();
 		if (err)
@@ -95,11 +88,11 @@ void Commands_RxCallback(UART_HandleTypeDef * huart)
 		}
 		else 
 		{
-			// err = Commands_executeCurrent();
-			// if (err)
-			// {
-			// 	Utils_printCommandError(err);
-			// }
+			err = Commands_executeCurrent();
+			if (err)
+			{
+				Utils_printCommandError(err);
+			}
 		}
 
 		index = 0;
@@ -166,6 +159,7 @@ Commands_Error_t Commands_parseIntoCurrent()
 	uint8_t temp_buffer[COMMAND_MAX_LENGTH + 1] = {0};
 	strncpy((char *) temp_buffer, (char *) command_buffer, command_length); // Removes the \n at the end
 	temp_buffer[command_length] = ' '; // replace the \n with a space
+	command_length++;
 
 	// Store received command into current_command
 	uint32_t command_part_index = 0;
@@ -179,7 +173,7 @@ Commands_Error_t Commands_parseIntoCurrent()
 		}
 
 		int32_t space_index = local_getCharIndex(&temp_buffer[start_index], command_length, ' ');
-		if (space_index < 0 || space_index > command_length) // > and not >= on purpose, there is a \0 on index [command_length] so is ok
+		if (space_index < 0)
 		{
 			return CMD_ERROR_COULD_NOT_PARSE;
 		}
@@ -190,9 +184,6 @@ Commands_Error_t Commands_parseIntoCurrent()
 		command_length -= (space_index + 1); // Updates command length
 		command_part_index++;
 	}
-
-	// uint8_t print_buffer[64] = {0};
-	// Utils_printToUart2(Utils_getCommandInfoString(current_command, print_buffer));
 
 	return CMD_ERROR_OK;
 }
