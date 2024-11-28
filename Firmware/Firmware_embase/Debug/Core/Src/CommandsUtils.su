@@ -1,8 +1,0 @@
-../Core/Src/CommandsUtils.c:18:6:Utils_initEmptyCommand	24	static
-../Core/Src/CommandsUtils.c:37:18:Utils_setCommandPartByIndex	24	static
-../Core/Src/CommandsUtils.c:80:9:Utils_power	24	static
-../Core/Src/CommandsUtils.c:103:6:Utils_isNumeric	16	static
-../Core/Src/CommandsUtils.c:116:18:Utils_stringToInt32	48	static
-../Core/Src/CommandsUtils.c:164:18:Utils_int32ToString	48	static
-../Core/Src/CommandsUtils.c:225:6:Utils_printToUart2	16	static
-../Core/Src/CommandsUtils.c:235:6:Utils_printCommandError	16	static

@@ -10,6 +10,23 @@
 #include "main.h"
 #include "usart.h"
 
+Commands_Error_t Utils_PrintCommandToUart2(Command_t command)
+{
+	char buffer[COMMAND_MAX_LENGTH] = {0};
+	strcpy(buffer, (char *) command.destination);
+	strcat(buffer, " ");
+	strcat(buffer, (char *) command.name);
+	for (uint32_t i = 0; i < COMMAND_MAX_ARGS; i++)
+	{
+		strcat(buffer, " ");
+		strcat(buffer, (char *) command.args[i]);
+	}
+	strcat(buffer, "\n");
+
+	Utils_printToUart2((uint8_t *) buffer);
+	return CMD_ERROR_OK;
+}
+
 /**
  * @brief Initialize a command (set all elements to 0)
  * 

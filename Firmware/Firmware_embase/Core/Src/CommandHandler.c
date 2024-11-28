@@ -114,6 +114,10 @@ Commands_Error_t Commands_executeCurrent()
 	{
 		err = Config_handleCommand(current_command);
 	}
+	else if (!strcmp((char *) current_command.destination, "test"))
+	{
+		err = Utils_PrintCommandToUart2(current_command);
+	}
 	// ---new destination example---
 	// else if (!strcmp((char *) current_command.destination, "example"))
 	// {
