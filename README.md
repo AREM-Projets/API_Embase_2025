@@ -8,5 +8,11 @@ Il contient aussi un firmware destiné à contrôler une embase de ce type avec 
 
 ## Avancement du projet
 
-- Python WIP
-- Code STM32 WIP
+### Firmware 
+- parser de commandes : fonctionnel
+- contrôle moteur basique : à tester
+- odométrie : WIP
+
+### Python
+- communication UART pour test : fonctionnel
+- lib de gestion de commandes : WIP

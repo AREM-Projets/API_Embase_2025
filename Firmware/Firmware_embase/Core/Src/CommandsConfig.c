@@ -8,6 +8,8 @@
 #include "CommandsConfig.h"
 #include "string.h"
 
+///////// variables /////////
+
 Team_t team = TEAM_NONE;
 Strategy_t strategy = STRATEGY_NONE;
 
@@ -86,6 +88,12 @@ uint8_t *local_strategyEnumToString(Strategy_t strategy)
 
 ///////// Functions /////////
 
+/**
+ * @brief execute a get command
+ * 
+ * @param var_name variable to get the value of
+ * @return Commands_Error_t 
+ */
 Commands_Error_t Config_get(uint8_t *var_name)
 {
 	if (strcmp((char *) var_name, "team") == 0)
@@ -104,6 +112,13 @@ Commands_Error_t Config_get(uint8_t *var_name)
 	}
 }
 
+/**
+ * @brief execute a set command 
+ * 
+ * @param var_name variable to be set
+ * @param value new value to set the variable to
+ * @return Commands_Error_t 
+ */
 Commands_Error_t Config_set(uint8_t *var_name, uint8_t *value)
 {
 	if (strcmp((char *) var_name, "team") == 0)
@@ -126,6 +141,12 @@ Commands_Error_t Config_set(uint8_t *var_name, uint8_t *value)
 	}
 }
 
+/**
+ * @brief Handle a command for the Config destination
+ * 
+ * @param command command to be handled
+ * @return Commands_Error_t 
+ */
 Commands_Error_t Config_handleCommand(Command_t command)
 {
 	// Verify destination

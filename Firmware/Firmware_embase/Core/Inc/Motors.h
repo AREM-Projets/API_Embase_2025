@@ -47,13 +47,16 @@ typedef struct
 
 void Motors_Init();
 
-void Motors_SetSpeedSingle(uint8_t motor_index, MotorDirection_t direction, uint32_t period_us);
+void Motors_SetSpeedSingle(uint8_t motor_index, MotorDirection_t direction, uint32_t period_us, int64_t step_count);
 void Motors_StopSingle(uint8_t motor_index);
 
-void Motors_SetSpeedAll(MotorDirection_t *directions, uint32_t *periods_us);
+void Motors_SetSpeedAll(MotorDirection_t *directions, uint32_t *periods_us, int64_t *step_counts);
 void Motors_StopAll();
 
 void Motors_Update();
+
+int64_t Motors_getRemainingSteps(uint8_t motor_index);
+bool Motors_isMoving();
 
 // Callback should be added to the HAL_TIM_PeriodElapsedCallback
 void Motors_TimerITCallback(TIM_HandleTypeDef* htim);

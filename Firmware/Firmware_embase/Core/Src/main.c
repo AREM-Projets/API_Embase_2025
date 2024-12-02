@@ -70,6 +70,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	MotorDirection_t dirs[3] = {DIR_FORWARD, DIR_FORWARD, DIR_BACKWARD};
+	int64_t step_counts[3] = {-1, -1, -1};
 	uint32_t periods[3] = {10000, 10000, 10000};
 
   /* USER CODE END 1 */
@@ -101,8 +102,8 @@ int main(void)
   Motors_Init();
   HAL_UART_Receive_IT(&huart2, &(command_buffer[0]), 1);
 
-  Motors_SetSpeedAll(dirs, periods);
   Utils_printToUart2((uint8_t *) "Init OK\n");
+  Motors_SetSpeedAll(dirs, periods, step_counts);
   /* USER CODE END 2 */
 
   /* Infinite loop */

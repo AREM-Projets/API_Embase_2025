@@ -22,7 +22,8 @@ if __name__ == "__main__" :
         while time.time() - start_time < (TIMEOUT_S):
             if ser.in_waiting > 0:
                 response += ser.read(ser.in_waiting)
-                # Optionally break if you detect a complete message, e.g., a newline
+                if b'\n' in response:
+                    break
 
         if response:
             decoded_response = response.decode('utf-8')
