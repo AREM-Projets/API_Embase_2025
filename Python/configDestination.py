@@ -1,45 +1,19 @@
 import serial
+from genericDestination import genericDestination
 
-class configDestination :
+class configDestination(genericDestination) :
 
-    def __init__(self, serial_instance : serial.Serial) -> None:
-        """
-        Initialize a destination with no command types and no commands
-        """
-        self.destination_name = "config"
-        self.serial_inst = serial_instance
+    def __init__(self, ser : serial.Serial, ser_timeout_s : float = 1):
+        super().__init__("config", ser, ser_timeout_s)
 
-    def commandString(self, command_name : str, command_args : list) -> str :
-        """
-        returns the string associated with a specific command, used by other methods
-        """
-        args_string = " ".join(map(str, command_args))
-        res = f"{self.destination_name} {command_name} {args_string}"
-        return res
+    def get(self, variable : str) -> str:
+        return self.sendCommand("get", [variable])
 
-    def set(self, variable : str, value) -> str :
-        """
-        Set a variable to a value
-        """
-        res : str = self.commandString("set", [variable, value])
-        ## Send via UART
-        ## Wait for answer
-        ## 
-        
-        
-        
-    def get(self, variable : str) -> str :
-        """
-        Get a variable's value
-        """
-        
+    def set(self, variable : str, value) -> str:
+        return self.sendCommand("set", [variable, value])
     
-# Test
+if __name__=="__main__" :
+    # ser = serial.Serial("COM7", 115200, timeout=1)
+    config = configDestination(None, 1)
 
-if __name__ == "__main__" :
-    config = configDestination()
-    print(config.set("team", [1]))
-    print(config.set("team", ["blue"]))
-    print(config.get("base_speed"))
-
-    
+    print(config.get("team"))
