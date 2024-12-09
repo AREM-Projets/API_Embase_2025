@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "Motors.h"
 #include "CommandHandler.h"
+#include "HC06.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,12 +99,14 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM6_Init();
   MX_TIM7_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  Motors_Init();
-  HAL_UART_Receive_IT(&huart2, &(command_buffer[0]), 1);
+  HC06_TestPresence();
+  // Motors_Init();
+  // HAL_UART_Receive_IT(&huart2, &(command_buffer[0]), 1);
 
-  Utils_printToUart2((uint8_t *) "Init OK\n");
-  Motors_SetSpeedAll(dirs, periods, step_counts);
+  // printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "Init OK\n");
+  // Motors_SetSpeedAll(dirs, periods, step_counts);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -177,7 +180,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 {
-	if (huart->Instance == USART2)
+	if (huart->Instance == COMMAND_UART_HANDLE_PTR->Instance)
 	{
 		Commands_RxCallback(huart);
 	}

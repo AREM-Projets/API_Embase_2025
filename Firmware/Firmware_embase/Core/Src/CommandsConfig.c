@@ -98,12 +98,12 @@ Commands_Error_t Config_get(uint8_t *var_name)
 {
 	if (strcmp((char *) var_name, "team") == 0)
 	{
-		Utils_printToUart2(local_teamEnumToString(team));
+		printToUart(COMMAND_UART_HANDLE_PTR, local_teamEnumToString(team));
 		return CMD_ERROR_OK;
 	}
 	else if(strcmp((char *) var_name, "strategy") == 0)
 	{
-		Utils_printToUart2(local_strategyEnumToString(strategy));
+		printToUart(COMMAND_UART_HANDLE_PTR, local_strategyEnumToString(strategy));
 		return CMD_ERROR_OK;
 	}
 	else
@@ -125,14 +125,14 @@ Commands_Error_t Config_set(uint8_t *var_name, uint8_t *value)
 	{
 		team = local_stringToTeamEnum(value);
 
-		Utils_printToUart2(local_teamEnumToString(team));
+		printToUart(COMMAND_UART_HANDLE_PTR, local_teamEnumToString(team));
 		return CMD_ERROR_OK;
 	}
 	else if(strcmp((char *) var_name, "strategy") == 0)
 	{
 		strategy = local_stringToStrategyEnum(value);
 
-		Utils_printToUart2(local_strategyEnumToString(strategy));
+		printToUart(COMMAND_UART_HANDLE_PTR, local_strategyEnumToString(strategy));
 		return CMD_ERROR_OK;
 	}
 	else

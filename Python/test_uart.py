@@ -17,6 +17,7 @@ if __name__ == "__main__" :
         ser.write(command.encode('utf-8'))
 
         response = b""
+        ser.flush()
         start_time = time.time()
 
         while time.time() - start_time < (TIMEOUT_S):

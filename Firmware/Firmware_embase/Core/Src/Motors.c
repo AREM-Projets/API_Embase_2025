@@ -63,7 +63,7 @@ static volatile int64_t motor_double_remaining_steps[3] = {0};
  * Get the GPIO port (MOTx_EN_GPIO_Port) for a motor based on its index.
  * An invalid index will return 0
  */
-#define MOT_EN_GPIO_PORT(motor_index)  (((motor_index) == 2) ? MOT2_EN_GPIO_Port : \
+#define MOT_EN_GPIO_PORT(motor_index)  	(((motor_index) == 2) ? MOT2_EN_GPIO_Port : \
 										(((motor_index) == 1) ? MOT1_EN_GPIO_Port : \
 										(((motor_index) == 0) ? MOT0_EN_GPIO_Port : 0)))
 
@@ -135,7 +135,7 @@ void Motors_Init()
 		motor_states[i].step_period_us = 0;
 
 		// IT Not handled by update()
-		motor_it_enabled[i] = false
+		motor_it_enabled[i] = false;
 		HAL_TIM_Base_Stop_IT(MOT_TIM_HANDLE_PTR(i));
 	}
 

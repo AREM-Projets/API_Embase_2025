@@ -9,8 +9,9 @@
 #include "string.h"
 #include "main.h"
 #include "usart.h"
+#include "Uart_io.h"
 
-Commands_Error_t Utils_PrintCommandToUart2(Command_t command)
+Commands_Error_t Utils_PrintCommandToUart(Command_t command)
 {
 	char buffer[COMMAND_MAX_LENGTH] = {0};
 	strcpy(buffer, (char *) command.destination);
@@ -23,7 +24,7 @@ Commands_Error_t Utils_PrintCommandToUart2(Command_t command)
 	}
 	strcat(buffer, "\n");
 
-	Utils_printToUart2((uint8_t *) buffer);
+	printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) buffer);
 	return CMD_ERROR_OK;
 }
 
@@ -235,16 +236,6 @@ Commands_Error_t Utils_int32ToString(int32_t src, uint8_t *dest, uint32_t length
 }
 
 /**
- * @brief print a string using UART2 via DMA. ONLY 1 PRINT PER INTERRUPT WILL WORK.
- * 
- * @param string zero-terminated string to be printed
- */
-void Utils_printToUart2(uint8_t* string)
-{
-	HAL_UART_Transmit_DMA(&huart2, string, strlen((char *) string));
-}
-
-/**
  * @brief print an error message based on the error.
  * 
  * @param error error to print the message for.
@@ -253,30 +244,30 @@ void Utils_printCommandError(Commands_Error_t error)
 {
 	switch (error) {
 		case CMD_ERROR_INVALID_DESTINATION:
-			Utils_printToUart2((uint8_t *) "[Error] Invalid command destination\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Invalid command destination\n");
 			break;
 		case CMD_ERROR_INVALID_NAME:
-			Utils_printToUart2((uint8_t *) "[Error] Invalid command name\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Invalid command name\n");
 			break;
 		case CMD_ERROR_INVALID_ARGS:
-			Utils_printToUart2((uint8_t *) "[Error] Invalid arguments given\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Invalid arguments given\n");
 			break;
 		case CMD_ERROR_COMMAND_TOO_LONG:
-			Utils_printToUart2((uint8_t *) "[Error] Command is too long\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Command is too long\n");
 			break;
 		case CMD_ERROR_COULD_NOT_PARSE:
-			Utils_printToUart2((uint8_t *) "[Error] Could not parse command\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Could not parse command\n");
 			break;
 		case CMD_ERROR_UNKNOWN:
-			Utils_printToUart2((uint8_t *) "[Error] Unspecified error\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Unspecified error\n");
 			break;
 
 		case CMD_ERROR_NOT_IMPLEMENTED:
-			Utils_printToUart2((uint8_t *) "[Error] Not implemented\n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] Not implemented\n");
 			break;
 
 		default:
-			Utils_printToUart2((uint8_t *) "[Error] no error message (default case) \n");
+			printToUart(COMMAND_UART_HANDLE_PTR, (uint8_t *) "[Error] no error message (default case) \n");
 			break;
 	}
 }

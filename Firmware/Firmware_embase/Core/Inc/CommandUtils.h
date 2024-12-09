@@ -8,8 +8,11 @@
 #ifndef INC_COMMANDUTILS_H_
 #define INC_COMMANDUTILS_H_
 
+#include "usart.h"
 #include "stdint.h"
 #include "stdbool.h"
+
+#define COMMAND_UART_HANDLE_PTR (&huart2)
 
 #define UART_TX_MAX_LENGTH 256
 
@@ -52,8 +55,7 @@ Commands_Error_t Utils_int32ToString(int32_t src, uint8_t *dest, uint32_t length
 int32_t Utils_power(int32_t base, uint32_t exponent);
 bool Utils_isNumeric(uint8_t c);
 
-void Utils_printToUart2(uint8_t* string);
-Commands_Error_t Utils_PrintCommandToUart2(Command_t command);
+Commands_Error_t Utils_PrintCommandToUart(Command_t command);
 void Utils_printCommandError(Commands_Error_t error);
 
 #endif /* INC_COMMANDUTILS_H_ */
